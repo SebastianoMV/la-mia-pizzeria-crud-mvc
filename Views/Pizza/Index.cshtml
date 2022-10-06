@@ -1,0 +1,47 @@
+﻿
+@model List<Pizza>
+
+<a class="btn btn-primary" href="@Url.Action("Create")">Crea nuova pizza</a>
+
+<table class="table container">
+    @if(Model.Count >0){
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrizione</th>
+                <th scope="col">Foto</th>
+                <th scope="col">Prezzo</th>
+            </tr>
+        </thead>
+        <tbody>     
+
+            @foreach (Pizza pizza in Model)
+            {
+                <tr>
+                    <td>@pizza.Id</td>
+                    <td>@pizza.Nome</td>
+                    <td>@pizza.Descrizione</td>
+                    <td><img src="@pizza.Image" /></td>
+                    <td>@pizza.Prezzo &euro;</td>
+                    <td><a class="btn btn-outline-primary" href="@Url.Action("Details", "Pizza", new {Id= pizza.Id})">Dettagli</a></td>
+                    <td><a class="btn btn-outline-secondary " href="@Url.Action("Update", "Pizza", new {Id= pizza.Id})">Modifica</a></td>
+                    <td>
+                        <form asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.Id">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-damger">Delete</button>
+                        </form>
+                    </td>
+                </tr> 
+            }
+
+    </tbody>
+    }
+    else
+    {
+         <tr>
+             <td><h2>Non ci sono pizze.</h2></td>
+         </tr>
+    }
+</table>
+
