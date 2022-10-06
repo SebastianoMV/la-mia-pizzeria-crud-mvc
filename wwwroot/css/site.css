@@ -14,5 +14,17 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+}
+
+header {
+    background-color: #c00a27;
+}
+
+.navbar{
+    background-color: transparent !important; 
+    color: white;
+}
+
+main{
+    min-height: calc(100vh - 100px);
 }

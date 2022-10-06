@@ -45,10 +45,11 @@ namespace la_mia_pizzeria_post.Controllers
         public IActionResult Update(int id)
         {
             Context db = new Context();
-            Pizza pizza = db.Pizza.Where(_ => _.Id == id).First();
+            Pizza pizza = FindPizza(id);
             return View(pizza);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Update(int id , Pizza form)
         {
             Context db = new Context();
@@ -65,7 +66,7 @@ namespace la_mia_pizzeria_post.Controllers
         public IActionResult Delete(int id)
         {
             Context db = new Context();
-            Pizza pizza = db.Pizza.Where(_ => _.Id == id).First();
+            Pizza pizza = FindPizza(id);
             db.Pizza.Remove(pizza);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -95,7 +96,13 @@ namespace la_mia_pizzeria_post.Controllers
             Context db = new Context();
             db.Add(pizza);
             db.SaveChanges();
+        }
 
+        public Pizza FindPizza(int id)
+        {
+            Context db = new Context();
+            Pizza pizza = db.Pizza.Where(_ => _.Id == id).First();
+            return pizza;
         }
 
     }
