@@ -5,6 +5,11 @@ namespace la_mia_pizzeria_post.Models
 {
     public class Context : DbContext
     {
+        public Context()
+        {
+
+        }
+
         public DbSet<Pizza> Pizza { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

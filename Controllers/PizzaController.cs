@@ -5,14 +5,12 @@ using System.Diagnostics;
 
 namespace la_mia_pizzeria_post.Controllers
 {
+   
     public class PizzaController : Controller
     {
-        private readonly ILogger<PizzaController> _logger;
+        
+        readonly Context _context = new();
 
-        public PizzaController(ILogger<PizzaController> logger)
-        {
-            _logger = logger;
-        }
         public IActionResult Index()
         { 
             return View(Pizze());
@@ -20,8 +18,8 @@ namespace la_mia_pizzeria_post.Controllers
 
         public IActionResult Details(int id)
         {
-            Context db = new Context();
-            Pizza pizza = (Pizza)db.Pizza.Where(pizze=> pizze.Id == id).First();
+            
+            Pizza pizza = (Pizza)_context.Pizza.Where(pizze=> pizze.Id == id).First();
             return View(pizza);
         }
 
@@ -44,31 +42,30 @@ namespace la_mia_pizzeria_post.Controllers
         
         public IActionResult Update(int id)
         {
-            Context db = new Context();
+            
             Pizza pizza = FindPizza(id);
             return View(pizza);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Update(int id , Pizza form)
         {
-            Context db = new Context();
-            Pizza pizza = db.Pizza.Where(_ => _.Id == id).First();
-            pizza.Nome = form.Nome;
-            pizza.Descrizione = form.Descrizione;
-            pizza.Image = form.Image;
+            
+            _context.Pizza.Update(form);
 
-            db.SaveChanges();
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Context db = new Context();
+            
             Pizza pizza = FindPizza(id);
-            db.Pizza.Remove(pizza);
-            db.SaveChanges();
+            _context.Pizza.Remove(pizza);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -85,25 +82,23 @@ namespace la_mia_pizzeria_post.Controllers
 
         public List<Pizza> Pizze()
         {
-            Context db = new Context();
-            List<Pizza> pizze = db.Pizza.ToList<Pizza>();
+            
+            List<Pizza> pizze = _context.Pizza.ToList<Pizza>();
             return pizze;
         }
 
-
         public void Aggiungi(Pizza pizza)
         {
-            Context db = new Context();
-            db.Add(pizza);
-            db.SaveChanges();
+
+            _context.Add(pizza);
+            _context.SaveChanges();
         }
 
         public Pizza FindPizza(int id)
         {
-            Context db = new Context();
-            Pizza pizza = db.Pizza.Where(_ => _.Id == id).First();
+            
+            Pizza pizza = _context.Pizza.Where(_ => _.Id == id).First();
             return pizza;
         }
-
     }
 }
