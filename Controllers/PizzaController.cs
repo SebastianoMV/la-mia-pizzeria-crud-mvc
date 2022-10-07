@@ -25,7 +25,10 @@ namespace la_mia_pizzeria_post.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            CategoriesPizzas categoriesPizzas = new CategoriesPizzas();
+            categoriesPizzas.Categories = new Context().Category.ToList();
+            
+            return View(categoriesPizzas);
         }
 
         [HttpPost]

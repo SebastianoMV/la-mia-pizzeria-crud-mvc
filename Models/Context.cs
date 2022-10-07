@@ -10,6 +10,8 @@ namespace la_mia_pizzeria_post.Models
 
         }
 
+        public DbSet<Category> Category { get; set; }
+
         public DbSet<Pizza> Pizza { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

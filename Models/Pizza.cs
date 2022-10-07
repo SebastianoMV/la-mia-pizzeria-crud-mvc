@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace la_mia_pizzeria_post.Models
 {
-    [Table("pizze")]
+    [Table("Pizza")]
     public class Pizza
     {
-        public Pizza(string nome, string descrizione, string image, double prezzo)
+        public Pizza(string nome, string descrizione, string image, decimal prezzo)
         {
             Nome = nome;
             Descrizione = descrizione;
@@ -35,6 +35,9 @@ namespace la_mia_pizzeria_post.Models
         public string Image { get; set; }
         [Required(ErrorMessage = "Il campo prezzo è obbligatorio")]
         [Range(1, 99, ErrorMessage = "Il prezzo deve essere fra 1 e 99 Euro")]
-        public double Prezzo { get; set; }
+        public decimal Prezzo { get; set; }
+
+        public int? CategoryId { get; set; }   
+        public Category? Category { get; set; }
     }
 }
