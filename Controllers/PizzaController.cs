@@ -1,26 +1,30 @@
 ﻿using la_mia_pizzeria_post.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-
 
 namespace la_mia_pizzeria_post.Controllers
 {
-   
     public class PizzaController : Controller
     {
-        
         readonly Context _context = new();
 
         public IActionResult Index()
-        { 
+        {
+            List<Pizza> pizzaList = _context.Pizza.Include("Category").ToList();
             return View(Pizze());
         }
-
         public IActionResult Details(int id)
-        {
-            
-            Pizza pizza = (Pizza)_context.Pizza.Where(pizze=> pizze.Id == id).First();
-            return View(pizza);
+        {       
+            Pizza pizza = _context.Pizza.Where(Pizza=> Pizza.Id == id).Include("Category").First();
+            if (pizza == null)
+            {
+                return NotFound($"La Pizza con id {id} non è stato trovato");
+            }
+            else
+            {
+                return View("Details", pizza);
+            }
         }
 
         public IActionResult Create()
@@ -33,13 +37,14 @@ namespace la_mia_pizzeria_post.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Pizza pizza)
+        public IActionResult Create(CategoriesPizzas form)
         {
             if (!ModelState.IsValid)
             {
-                return View("Create", pizza);
+                form.Categories = _context.Category.ToList();
+                return View("Create", form);
             }
-            Aggiungi(pizza);
+            Aggiungi(form.Pizza);
             return RedirectToAction("Index");
         }
         
@@ -47,15 +52,20 @@ namespace la_mia_pizzeria_post.Controllers
         {
             
             Pizza pizza = FindPizza(id);
-            return View(pizza);
+            CategoriesPizzas categoriesPizzas = new CategoriesPizzas();
+            categoriesPizzas.Pizza = pizza;
+            categoriesPizzas.Categories = _context.Category.ToList();
+
+            return View(categoriesPizzas);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(int id , Pizza form)
+        public IActionResult Update(int id , CategoriesPizzas form)
         {
-            
-            _context.Pizza.Update(form);
+
+            form.Pizza.Id = id;
+            _context.Pizza.Update(form.Pizza);
 
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -71,7 +81,6 @@ namespace la_mia_pizzeria_post.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
         public IActionResult Privacy()
         {
             return View();
@@ -82,24 +91,18 @@ namespace la_mia_pizzeria_post.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
         public List<Pizza> Pizze()
-        {
-            
+        { 
             List<Pizza> pizze = _context.Pizza.ToList<Pizza>();
             return pizze;
         }
-
         public void Aggiungi(Pizza pizza)
         {
-
             _context.Add(pizza);
             _context.SaveChanges();
         }
-
         public Pizza FindPizza(int id)
-        {
-            
+        { 
             Pizza pizza = _context.Pizza.Where(_ => _.Id == id).First();
             return pizza;
         }

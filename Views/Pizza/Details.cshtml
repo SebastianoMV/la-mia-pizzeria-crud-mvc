@@ -6,6 +6,7 @@
     <div class="card-body">
         <h5 class="card-title">@Model.Nome</h5>
         <p class="card-text">@Model.Descrizione</p>
+        <p class="card-text">@Model.Category.Name</p>
         <div class="d-flex justify-content-between">
             <a class="btn btn-primary" asp-area="" asp-controller="Pizza" asp-action="Index">Indietro</a>
             <a class="btn btn-secondary " href="@Url.Action("Update", "Pizza", new {Id= @Model.Id})">Modifica</a>
@@ -14,7 +15,6 @@
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
-        
     </div>
 </div>
 

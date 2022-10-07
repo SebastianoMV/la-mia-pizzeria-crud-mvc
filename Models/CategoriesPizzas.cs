@@ -4,8 +4,8 @@ namespace la_mia_pizzeria_post.Models
 {
     public class CategoriesPizzas
     {
-        public Pizza Pizza { get; set; }
-        public List<Category> Categories { get; set; }
+        public Pizza? Pizza { get; set; }
+        public List<Category>? Categories { get; set; }
 
         public CategoriesPizzas()
         {

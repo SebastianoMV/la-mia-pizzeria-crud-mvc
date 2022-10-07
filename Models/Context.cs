@@ -5,10 +5,6 @@ namespace la_mia_pizzeria_post.Models
 {
     public class Context : DbContext
     {
-        public Context()
-        {
-
-        }
 
         public DbSet<Category> Category { get; set; }
 
