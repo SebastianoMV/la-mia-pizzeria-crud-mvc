@@ -23,6 +23,8 @@
         <input asp-for="Pizza.Prezzo" type="number" class="form-control" placeholder="Prezzo pizza">
         <span asp-validation-for="Pizza.Prezzo" class="text-danger"></span>
     </div>
+
+    @*CATEGORIA*@
     <div class="my-3">
         <label for="CategoryId">Categoria pizza</label>
         <select asp-for="Pizza.CategoryId" rows="10" class="d-block w-100">
@@ -34,5 +36,6 @@
         </select>
         <span asp-validation-for="Pizza.CategoryId" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

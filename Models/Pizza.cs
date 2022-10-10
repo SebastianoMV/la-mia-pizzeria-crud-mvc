@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace la_mia_pizzeria_post.Models
 {
-    [Table("Pizza")]
     public class Pizza
     {
         public Pizza(string nome, string descrizione, string image, decimal prezzo)
@@ -39,5 +38,7 @@ namespace la_mia_pizzeria_post.Models
 
         public int? CategoryId { get; set; }   
         public Category? Category { get; set; }
+
+        public List<Ingredient> Ingredients { get; set; }
     }
 }
