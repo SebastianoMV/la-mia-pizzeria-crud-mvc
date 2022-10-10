@@ -9,7 +9,7 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Nome</th>
-                <th scope="col">Descrizione</th>
+                <th scope="col">Ingredienti</th>
                 <th scope="col">Categoria</th>
                 <th scope="col">Foto</th>
                 <th scope="col">Prezzo</th>
@@ -23,7 +23,11 @@
                 <tr>
                     <td>@pizza.Id</td>
                     <td>@pizza.Nome</td>
-                    <td>@pizza.Descrizione</td>
+                    <td>
+                        @foreach(Ingredient ingredient in pizza.Ingredients){
+                            <span><i>@ingredient.Name,</i> </span>
+                        }
+                    </td>
                     <td>@pizza.Category.Name</td>
                     <td><img src="@pizza.Image" /></td>
                     <td>@pizza.Prezzo &euro;</td>

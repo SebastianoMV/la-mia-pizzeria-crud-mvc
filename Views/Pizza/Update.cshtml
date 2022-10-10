@@ -40,5 +40,24 @@
         </select>
         <span asp-validation-for="Pizza.CategoryId" class="text-danger"></span>
     </div>
+
+    @*INGREDIENTI*@
+    <div class="my-3">
+        <label for="SelectedIngredients"></label>
+        <select multiple="multiple" asp-for="SelectedIngredients" rows="10" class="d-block w-100">
+            @foreach (Ingredient ingredient in Model.Ingredients)
+            {
+                @if (Model.Pizza.Ingredients.Contains(ingredient))
+                {
+                    <option selected value="@ingredient.Id">@ingredient.Name</option>
+                }
+                else
+                {
+
+                    <option value="@ingredient.Id">@ingredient.Name</option>
+                }
+            }
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

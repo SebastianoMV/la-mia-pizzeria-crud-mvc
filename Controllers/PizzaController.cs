@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq;
 
 namespace la_mia_pizzeria_post.Controllers
 {
@@ -11,12 +12,12 @@ namespace la_mia_pizzeria_post.Controllers
 
         public IActionResult Index()
         {
-            List<Pizza> pizzaList = _context.Pizza.Include("Category").ToList();
-            return View(Pizze());
+            List<Pizza> pizzaList = _context.Pizza.Include("Category").Include("Ingredients").ToList();
+            return View(pizzaList);
         }
         public IActionResult Details(int id)
         {       
-            Pizza pizza = _context.Pizza.Where(Pizza=> Pizza.Id == id).Include("Category").First();
+            Pizza pizza = _context.Pizza.Where(Pizza=> Pizza.Id == id).Include("Category").Include("Ingredients").First();
             if (pizza == null)
             {
                 return NotFound($"La Pizza con id {id} non è stato trovato");
@@ -43,30 +44,48 @@ namespace la_mia_pizzeria_post.Controllers
             if (!ModelState.IsValid)
             {
                 form.Categories = _context.Category.ToList();
+                form.Ingredients = _context.Ingredient.ToList();
                 return View("Create", form);
             }
+            form.Pizza.Ingredients = _context.Ingredient.Where(ingredient => form.SelectedIngredients.Contains(ingredient.Id)).ToList<Ingredient>();
+
             Aggiungi(form.Pizza);
             return RedirectToAction("Index");
         }
         
         public IActionResult Update(int id)
         {
-            
-            Pizza pizza = FindPizza(id);
+
+            Pizza pizza = _context.Pizza.Where(_ => _.Id == id).Include("Category").Include("Ingredients").First();
             CategoriesPizzas categoriesPizzas = new CategoriesPizzas();
             categoriesPizzas.Pizza = pizza;
             categoriesPizzas.Categories = _context.Category.ToList();
+            categoriesPizzas.Ingredients = _context.Ingredient.ToList();
 
             return View(categoriesPizzas);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(int id , CategoriesPizzas form)
+        public IActionResult Update(int id, CategoriesPizzas form)
         {
+            if (!ModelState.IsValid)
+            {
+                form.Pizza.Id = id;
+                form.Pizza.Ingredients = _context.Ingredient.Where(i => form.SelectedIngredients.Contains(i.Id)).ToList();
+                form.Categories = _context.Category.ToList();
+                form.Ingredients = _context.Ingredient.ToList();
+                return View("Update", form);
+            }
+            Pizza pizza = _context.Pizza.Where(pizza => pizza.Id == id).Include("Ingredients").First();
+            pizza.Nome = form.Pizza.Nome;
+            pizza.Image = form.Pizza.Image;
+            pizza.Descrizione = form.Pizza.Descrizione;
+            pizza.CategoryId = form.Pizza.CategoryId;
+            pizza.Ingredients = _context.Ingredient.Where(ingredient => form.SelectedIngredients.Contains(ingredient.Id)).ToList();
 
-            form.Pizza.Id = id;
-            _context.Pizza.Update(form.Pizza);
+
+            _context.Pizza.Update(pizza);
 
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -76,8 +95,8 @@ namespace la_mia_pizzeria_post.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            
-            Pizza pizza = FindPizza(id);
+
+            Pizza pizza = _context.Pizza.Where(_ => _.Id == id).Include("Category").Include("Ingredients").First();
             _context.Pizza.Remove(pizza);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -92,20 +111,12 @@ namespace la_mia_pizzeria_post.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public List<Pizza> Pizze()
-        { 
-            List<Pizza> pizze = _context.Pizza.ToList<Pizza>();
-            return pizze;
-        }
+        
         public void Aggiungi(Pizza pizza)
         {
             _context.Add(pizza);
             _context.SaveChanges();
         }
-        public Pizza FindPizza(int id)
-        { 
-            Pizza pizza = _context.Pizza.Where(_ => _.Id == id).First();
-            return pizza;
-        }
+       
     }
 }
