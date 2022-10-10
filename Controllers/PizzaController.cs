@@ -31,6 +31,7 @@ namespace la_mia_pizzeria_post.Controllers
         {
             CategoriesPizzas categoriesPizzas = new CategoriesPizzas();
             categoriesPizzas.Categories = new Context().Category.ToList();
+            categoriesPizzas.Ingredients = new Context().Ingredient.ToList();
             
             return View(categoriesPizzas);
         }
