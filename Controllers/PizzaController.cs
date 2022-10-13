@@ -1,4 +1,5 @@
 ﻿using la_mia_pizzeria_post.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.Linq;
 
 namespace la_mia_pizzeria_post.Controllers
 {
+    [Authorize]
     public class PizzaController : Controller
     {
         readonly Context _context = new();

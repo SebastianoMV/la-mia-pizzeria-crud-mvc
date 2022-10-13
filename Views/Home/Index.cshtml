@@ -1,0 +1,46 @@
+﻿
+@model List<Pizza>
+
+
+
+<table class="table container">
+    @if(Model.Count >0){
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Ingredienti</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Foto</th>
+                <th scope="col">Prezzo</th>
+            </tr>
+        </thead>
+        <tbody>     
+            <h3>Pizze Classiche</h3>
+            @foreach (Pizza pizza in Model)
+            {
+            
+                <tr>
+                    <td>@pizza.Id</td>
+                    <td>@pizza.Nome</td>
+                    <td>
+                        @foreach(Ingredient ingredient in pizza.Ingredients){
+                            <span><i>@ingredient.Name,</i> </span>
+                        }
+                    </td>
+                    <td>@pizza.Category.Name</td>
+                    <td><img src="@pizza.Image" /></td>
+                    <td>@pizza.Prezzo &euro;</td>
+                </tr> 
+            }
+
+    </tbody>
+    }
+    else
+    {
+         <tr>
+             <td><h2>Non ci sono pizze.</h2></td>
+         </tr>
+    }
+</table>
+
