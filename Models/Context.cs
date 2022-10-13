@@ -1,10 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 
 namespace la_mia_pizzeria_post.Models
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<IdentityUser>
     {
+        public Context(DbContextOptions<Context> options)
+        : base(options)
+        {
+        }
+        public Context()
+        {
+
+        }
 
         public DbSet<Category> Category { get; set; }
 
